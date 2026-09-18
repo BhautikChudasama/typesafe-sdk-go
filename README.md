@@ -275,6 +275,18 @@ export TYPESAFE_API_KEY=sk-...
 go test -tags integration -v ./...
 ```
 
+A latency probe sits behind a second switch, because it makes a few hundred
+calls and reports percentiles rather than asserting anything:
+
+```sh
+TYPESAFE_LATENCY=1 go test -tags integration -run TestLatency -v ./...
+```
+
+It separates the two halves of a call — what the service spent, read from the
+gateway's `X-Envoy-Upstream-Service-Time`, and everything else, which is your
+network and this SDK. Only the first is a property of the API; read the second
+as a measurement of where you are sitting.
+
 They assert what the SDK must get right — a probability in range, a
 distribution that sums to one, a label the question offered, the caller's
 cancellation coming back as theirs — not what the model happens to answer.
