@@ -1,0 +1,19 @@
+{
+    "detail": [
+        {
+            "type": "list_type",
+            "loc": [
+                "body",
+                "questions",
+                "q",
+                "score",
+                "criteria"
+            ],
+            "msg": "Input should be a valid list",
+            "input": {
+                "0": "bad",
+                "1": "ok"
+            }
+        }
+    ]
+}

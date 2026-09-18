@@ -1,0 +1,18 @@
+# Binaries and build output
+/bin/
+/dist/
+*.exe
+*.test
+*.out
+
+# Coverage and profiling
+coverage.txt
+*.prof
+
+# Editors
+.idea/
+.vscode/
+.DS_Store
+
+# Local credentials for integration tests — never committed
+.env

@@ -1,0 +1,214 @@
+version: "2"
+
+# Lint configuration for the module.
+#
+# The enabled set is deliberately much broader than golangci-lint's default six.
+# This file exists so the standard is enforced on every push rather than
+# re-established by hand: a finding is either fixed, or suppressed at the exact
+# line with a comment saying why. No linter that found real code is disabled
+# wholesale.
+
+run:
+  # Tests are where most of this repository's claims are actually stated, so they
+  # are held to the same standard as the code they describe.
+  tests: true
+
+linters:
+  default: none
+  enable:
+    - asasalint
+    - asciicheck
+    - bidichk
+    - bodyclose
+    - canonicalheader
+    - containedctx
+    - contextcheck
+    - copyloopvar
+    - decorder
+    - dogsled
+    - dupl
+    - dupword
+    - durationcheck
+    - errcheck
+    - errchkjson
+    - errname
+    - errorlint
+    - exhaustive
+    - exptostd
+    - fatcontext
+    - forcetypeassert
+    - gocheckcompilerdirectives
+    - gochecksumtype
+    - gocognit
+    - goconst
+    - gocritic
+    - gocyclo
+    - godoclint
+    - godot
+    - goprintffuncname
+    - gosec
+    - govet
+    - iface
+    - inamedparam
+    - ineffassign
+    - interfacebloat
+    - intrange
+    - iotamixing
+    - makezero
+    - maintidx
+    - mirror
+    - misspell
+    - modernize
+    - nakedret
+    - nilerr
+    - nilnesserr
+    - nilnil
+    - noctx
+    - nolintlint
+    - nosprintfhostport
+    - perfsprint
+    - predeclared
+    - reassign
+    - recvcheck
+    - revive
+    - staticcheck
+    - tagalign
+    - testableexamples
+    - thelper
+    - tparallel
+    - unconvert
+    - unparam
+    - unused
+    - usestdlibvars
+    - usetesting
+    - wastedassign
+    - whitespace
+
+  settings:
+    govet:
+      enable-all: true
+      settings:
+        shadow:
+          # shadow's default only reports a shadow whose outer variable is read
+          # again afterwards — the shape that is already a bug. Strict reports the
+          # shape that merely reads like one: two `err` in a function, where which
+          # one a line means depends on the brace it is inside. Every production
+          # site now names the second, which is what the rest of this repository
+          # already did with decodeErr, scopeErr and reserveErr. One of them was
+          # load-bearing: objectKeys asserted on the inner token while appearing
+          # to assert on the outer delimiter.
+          strict: true
+      disable:
+        # Field order in the protocol types is chosen to read as documentation and
+        # to match the published schema's own ordering, so a reader can hold one
+        # against the other. Reordering for padding would trade that for a few
+        # bytes per message.
+        - fieldalignment
+
+    exhaustive:
+      # The protocol's string enumerations are open by design: a peer may send a
+      # variant from a later revision, and a default case is how this package
+      # refuses it rather than silently ignoring it.
+      default-signifies-exhaustive: true
+
+    goconst:
+      # Tests repeat values in readable case tables on purpose and are excluded
+      # below. Ignoring them while counting too stops a test-only repetition from
+      # reporting the sole real occurrence.
+      ignore-tests: true
+      # Equal strings in separate messages are not the same concept. Only
+      # repetitions that can drift apart should share a constant.
+      match-constant: false
+
+    gocognit:
+      # A function above this line is doing more than one readable job. Tests use
+      # deliberate case tables and fault scripts, so the production-only rule is
+      # selected below.
+      min-complexity: 30
+
+    gocyclo:
+      min-complexity: 30
+
+    recvcheck:
+      # Reading a value and writing one are not the same receiver, and the wire
+      # encoding needs both: MarshalJSON reads, and json.Unmarshaler cannot be
+      # satisfied without a pointer. It is what time.Time and net.IP do, and the
+      # alternative is a value type nobody can decode into.
+      #
+      # MarshalJSON is listed even though the Unmarshal side is built in: the
+      # built-in set covers only the decoding half, so without this every
+      # generated protocol type reports the mix its json interfaces require. The
+      # value receiver on it is load-bearing rather than stylistic — an optional
+      # property holds its value, not a pointer to one, so a pointer-receiver
+      # encoder would never be found and the default struct encoding would
+      # silently replace it.
+      exclusions:
+        - "*.MarshalJSON"
+        - "*.UnmarshalJSON"
+        - "*.UnmarshalText"
+
+    nolintlint:
+      # A suppression is a claim that the linter is wrong. It has to name the rule
+      # it disables and say why, or it is indistinguishable from silencing a real
+      # finding.
+      require-explanation: true
+      require-specific: true
+      allow-unused: false
+
+  exclusions:
+    # Generated files are code too. Protocol types generated from the published
+    # schema are the ones most worth linting, so the implicit exclusion is off from
+    # the day the first one appears.
+    generated: disable
+    warn-unused: true
+    rules:
+      # A failed assertion in a test is a test failure with a stack trace pointing
+      # at the assertion. The comma-ok form would add a branch that can only ever
+      # report the same thing less directly.
+      - path: _test\.go
+        linters:
+          - forcetypeassert
+
+      # Strict shadow reports `if err := f(); err != nil` inside a function that
+      # already has an err, which is worth renaming where a reader is tracing an
+      # invariant and pure noise in a test that checks a call and moves on. The
+      # non-strict rule still applies here, so a shadow that hides a later read is
+      # still a failure in a test.
+      - path: _test\.go
+        text: 'declaration of "(err|ok)" shadows'
+        linters:
+          - govet
+
+      # An Example is documentation before it is a test. log.Fatal is what a
+      # reader should copy into the main they are writing, and the stub server
+      # whose Close it skips dies with the test binary a moment later, so the
+      # leak gocritic names cannot happen. Contorting the example to satisfy the
+      # rule would teach the wrong pattern to make a linter quiet.
+      - path: example_test\.go
+        text: exitAfterDefer
+        linters:
+          - gocritic
+
+      # revive's exported rule asks every exported identifier for a doc comment.
+      # That is the right default and it stays on, but it cannot tell a comment
+      # that carries a reason from one that repeats the name. These methods mean
+      # exactly what a Go reader already knows they mean — the codec pair, the
+      # conventional accessors, and the two collection listings — so a comment on
+      # one could only say what the signature says. Where such a method does
+      # something surprising, the surprise is documented on the type that owns it
+      # or inline at the line that causes it.
+      - text: "exported: exported (method|function) [A-Za-z.]*(MarshalJSON|UnmarshalJSON)"
+        linters:
+          - revive
+
+issues:
+  # Truncating output turns "clean" into "clean as far as we looked".
+  max-issues-per-linter: 0
+  max-same-issues: 0
+
+formatters:
+  enable:
+    - gofumpt
+    - goimports
+  exclusions:
+    generated: disable

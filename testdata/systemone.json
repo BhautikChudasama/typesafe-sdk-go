@@ -1,0 +1,40 @@
+{
+    "model": "jev-1.13.0",
+    "answers": {
+        "isBilling": {
+            "type": "noul",
+            "noul": 0.98
+        },
+        "tone": {
+            "type": "choice",
+            "choice": "frustrated",
+            "confidence": 0.84,
+            "probabilities": {
+                "calm": 0.0,
+                "angry": 0.1,
+                "frustrated": 0.9
+            }
+        },
+        "urgency": {
+            "type": "score",
+            "score": 2.82,
+            "confidence": 0.82,
+            "legend": {
+                "0": "can wait",
+                "1": "this week",
+                "2": "today",
+                "3": "right now"
+            },
+            "probabilities": {
+                "0": 0.0,
+                "1": 0.0,
+                "2": 0.18,
+                "3": 0.82
+            }
+        }
+    },
+    "usage": {
+        "input_tokens": 359,
+        "output_tokens": 78
+    }
+}
