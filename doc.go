@@ -53,11 +53,11 @@
 // single answer to report a probability for; ask both and combine them in your
 // own code, which is cheaper to understand and to change than a longer prompt.
 //
-// The TypeScript SDK infers each answer's type from the question that produced
-// it. Go has no equivalent for a map whose value type varies by key, so the
-// answers arrive as an [Answers] map of an [Answer] interface, and
-// [Answers.Noul], [Answers.Choice], and [Answers.Score] name the type you
-// expect:
+// A question's type decides its answer's, but Go cannot vary a map's value type
+// by key, so the answers arrive as an [Answers] map of an [Answer] interface.
+// Name the type you expect with [Answers.Noul], [Answers.Choice], or
+// [Answers.Score], each of which reports a clear error if the service sent
+// something else:
 //
 //	urgency, err := result.Answers.Score("urgency")
 //

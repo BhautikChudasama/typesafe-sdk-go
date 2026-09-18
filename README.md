@@ -4,10 +4,7 @@
 [![Go 1.25+](https://img.shields.io/badge/go-1.25%2B-00ADD8?logo=go&logoColor=white)](https://go.dev/dl/)
 [![MIT](https://img.shields.io/badge/licence-MIT-blue)](./LICENSE)
 
-`typesafe-sdk-go` is a Go SDK for the [TypeSafe AI](https://typesafe.ai) API,
-ported from the
-[JavaScript SDK](https://github.com/typesafe-ai/typesafe-sdk-js) and speaking the
-same wire protocol.
+`typesafe-sdk-go` is a Go SDK for the [TypeSafe AI](https://typesafe.ai) API.
 
 TypeSafe answers typed questions about a piece of state and returns probability
 distributions, not prose. There is nothing to parse and no format to coax out of
@@ -127,9 +124,8 @@ round trip:
 Call `Validate()` on a `SystemOneRequest` or on `Questions` to check them
 yourself when a request is assembled far from where it is sent.
 
-The TypeScript SDK infers each answer's type from the question that produced it.
-Go has no equivalent for a map whose value type varies by key, so the type is
-named at the point of use:
+A question's type decides its answer's, but Go cannot vary a map's value type by
+key, so the type is named at the point of use:
 
 ```go
 isBilling, err := result.Answers.Noul("isBilling")   // *NoulAnswer
@@ -290,27 +286,38 @@ echo 'export TYPESAFE_API_KEY=sk-...' > .env && chmod 600 .env
 . ./.env && go test -tags integration ./...
 ```
 
-## Differences from the JavaScript SDK
+## Design notes
 
-The wire protocol is identical: the same endpoints, request bodies, headers, and
-retry arithmetic. The API shape follows Go instead of TypeScript.
+A few choices are worth knowing before you build on them.
 
-| JavaScript                              | Go                                                        | Why                                                                                      |
-| --------------------------------------- | --------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
-| `APIPromise`, `withResponse()`          | `(result, error)` with `result.Meta`                       | Go has no promises; the metadata a caller wants is the request ID, status, and raw body.  |
-| `AbortSignal`, `APIUserAbortError`      | `context.Context`, `context.Canceled`                      | Cancellation belongs to the context, and `errors.Is` already answers the question.        |
-| `APITimeoutError extends APIConnectionError` | `*ConnectionError` with a `Timeout` field              | One failure — no answer arrived. A timeout also matches `context.DeadlineExceeded`.        |
-| error subclasses, `instanceof`          | `*APIError` plus class sentinels, `errors.Is`              | Go matches errors by value, not by class.                                                 |
-| `noul()`, `choice()`, `score()` builders | `&NoulQuestion{…}`, `&ChoiceQuestion{…}`, `&ScoreQuestion{…}` | The builders existed to check at run time what Go's types check at compile time.       |
-| answer types inferred per question       | `Answers.Noul`/`Choice`/`Score`                            | Go cannot vary a map's value type by key, so the expected type is named at the call site. |
-| `Partial<RetryPolicy>` merging          | a whole `*RetryPolicy`, nil to inherit                     | Go zero values cannot express "unset"; a complete value needs no third state.             |
-| `Logger` interface, `logLevel`          | `*slog.Logger`                                             | `slog` is the standard, and it owns leveling.                                             |
-| `fetch`                                 | `*http.Client`                                             | Same idea, standard tool.                                                                  |
-| `dangerouslyAllowBrowser`               | —                                                          | There is no browser to guard against.                                                      |
+**Results carry their HTTP metadata.** Every call returns `(value, error)`, and
+the value has a `Meta` with the request ID, status, headers, and the raw
+response body. The typed fields drop anything the SDK does not model; `Meta.Body`
+is where to find it.
 
-Unrecognized payloads are kept rather than dropped: an answer type this release
-does not model arrives as `*UnknownAnswer` instead of failing the whole response,
-and `Meta.Body` holds the raw JSON.
+**Cancellation is the context's, and nothing else's.** `context.Canceled` means
+you gave up. An attempt that ran out of time is a `*ConnectionError` and matches
+`context.DeadlineExceeded`. The two never get confused for each other, which
+matters when you are deciding whether to try again.
+
+**One error type per thing that can go wrong.** A response the service refused
+is an `*APIError`, matched by class with `errors.Is`. A request that produced no
+complete response — a dropped connection or an attempt that timed out — is a
+`*ConnectionError`. There is no hierarchy to walk.
+
+**Settings are complete values, not patches.** A nil `*RetryPolicy` inherits the
+level above it and a non-nil one replaces it outright, so no field needs a third
+state to distinguish "unset" from its zero. Start from `DefaultRetryPolicy()`.
+
+**Questions are structs, and the compiler checks them.** There are no builder
+functions: a rubric is a `ScoreCriteria` slice and a label set is a
+`ChoiceCriteria` map, so the shapes that would otherwise need a run-time check
+cannot be written down wrong.
+
+**An unrecognized payload is kept, not dropped.** An answer whose type this
+release does not model arrives as an `*UnknownAnswer` carrying the original JSON,
+so one unfamiliar answer does not cost you the answers beside it. The typed
+accessors still refuse it.
 
 ## Documentation
 

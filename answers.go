@@ -10,11 +10,10 @@ import (
 // An Answer is one of [*NoulAnswer], [*ChoiceAnswer], [*ScoreAnswer], or
 // [*UnknownAnswer].
 //
-// The TypeScript SDK infers each answer's type from the question that produced
-// it. Go has no equivalent for a map whose values have different types per key,
-// so the type arrives at run time instead: use [Answers.Noul], [Answers.Choice],
-// and [Answers.Score], which name the type you expect and report a clear error
-// when the service disagrees.
+// A question's type decides its answer's, but Go cannot give a map values of
+// different types per key, so the type arrives at run time instead: use
+// [Answers.Noul], [Answers.Choice], and [Answers.Score], which name the type
+// you expect and report a clear error when the service disagrees.
 type Answer interface {
 	// AnswerType reports the wire discriminant: [TypeNoul], [TypeChoice],
 	// [TypeScore], or whatever unrecognized type the service sent.

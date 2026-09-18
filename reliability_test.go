@@ -11,9 +11,10 @@ import (
 	typesafe "github.com/Tangerg/typesafe-sdk-go"
 )
 
-// The cases here are the ones the JavaScript SDK guards as release regressions:
-// each is a way the transport can go wrong that a naive client gets subtly
-// wrong, and each has cost somebody a debugging session.
+// The cases here are the ways an HTTP client goes subtly wrong under load and
+// failure: a header displaced on a retry, a body that stalls after its headers
+// arrived, a connection dropped mid-answer, a cancellation mistaken for a
+// timeout. Each is cheap to get wrong and expensive to diagnose in production.
 
 // TestSDKHeadersSurviveEveryAttempt is the wide version of the precedence rule.
 // A caller may set any header in any capitalization, at either level, and the

@@ -2,10 +2,9 @@ typesafe-sdk-go — a Go SDK for the TypeSafe AI API
 
 Copyright 2026 Tangerg
 
-This product is a port of the TypeSafe JavaScript SDK
-(https://github.com/typesafe-ai/typesafe-sdk-js), published by TypeSafe under
-the MIT License. The API surface, wire format and behavior it reproduces are
-TypeSafe's; the Go implementation of them is this repository's.
+This product implements the TypeSafe AI API (https://docs.typesafe.ai), a
+service published by TypeSafe. The API surface, wire format and behavior it
+speaks are TypeSafe's; the Go implementation of them is this repository's.
 
 This product is not affiliated with or endorsed by TypeSafe.
 

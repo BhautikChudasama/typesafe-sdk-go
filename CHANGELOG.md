@@ -2,13 +2,11 @@
 
 ## v0.0.1 (2026-09-18)
 
-Initial release: a Go port of
-[`@typesafe-ai/sdk`](https://github.com/typesafe-ai/typesafe-sdk-js) v0.6.0,
-speaking the same wire protocol.
+First release of the Go SDK for the TypeSafe AI API.
 
 - `Client.SystemOne` for noul, choice, and score questions, with `Answers.Noul`,
-  `Answers.Choice`, and `Answers.Score` in place of TypeScript's per-question
-  type inference.
+  `Answers.Choice`, and `Answers.Score` naming the answer type at the point of
+  use.
 - `Client.ListModels`.
 - Configuration from `ClientOptions`, then `TYPESAFE_API_KEY`,
   `TYPESAFE_BASE_URL`, `TYPESAFE_DEFAULT_MODEL`, and `TYPESAFE_LOG_LEVEL`, then
@@ -29,5 +27,4 @@ speaking the same wire protocol.
   a caller. Unit tests run against response payloads captured from the live
   service under `testdata/`.
 
-See [Differences from the JavaScript SDK](README.md#differences-from-the-javascript-sdk)
-for the API shape changes the port makes.
+See [Design notes](README.md#design-notes) for the choices behind the API shape.

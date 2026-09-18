@@ -3,19 +3,19 @@
 Engineering conventions that apply to every change live in [`AGENTS.md`](AGENTS.md). The rules below hold only
 for this repository, and each one resolves a question `AGENTS.md` deliberately leaves open.
 
-- **The service owns the wire grammar.** Where this SDK disagrees with the TypeSafe API, the API wins. Port
-  what the service actually accepts and returns; do not invent a local dialect, and do not model a field the
-  service does not send.
+- **The service owns the wire grammar.** Where this SDK disagrees with the TypeSafe API, the API wins.
+  Implement what the service actually accepts and returns; do not invent a local dialect, and do not model a
+  field the service does not send.
 
-- **The JavaScript SDK is the reference, not the template.** `typesafe-sdk-js` defines the behavior to match:
-  the same headers, the same retry arithmetic, the same error messages extracted from the same body shapes.
-  Its *shape* is not binding. Where Go has a better answer — a context instead of an AbortSignal, a typed
-  error instead of a class hierarchy, a slice type instead of a runtime check — take it, and say in a comment
-  or the README what the port does differently and why.
+- **Behavior is settled against the running service, not against prose.** The documentation says what the API
+  is for; only the API says what it accepts. A rule this package enforces locally — a size, a required field,
+  a refused shape — earns its place by having been observed, and carries an integration test that checks it
+  from both sides so that a service which relaxes the rule fails a test instead of leaving this package
+  stricter than the API.
 
-- **Deviations from the reference need a stated reason.** A behavioral difference that is neither documented
-  nor tested is a bug. Every intentional one is named in `README.md` or in the doc comment of the type that
-  carries it.
+- **A design decision that is not obvious is written down.** Where this package answers something differently
+  from how a reader might expect, the reason belongs in the doc comment of the type that carries it, or in
+  `README.md` where it shapes how the whole SDK is used.
 
 - **Prefer the standard library.** The SDK has no third-party dependencies and should keep none: `net/http`,
   `encoding/json`, `log/slog`, and `context` cover everything it does. A dependency needs a reason the
