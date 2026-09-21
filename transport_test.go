@@ -10,7 +10,7 @@ import (
 	"sync"
 	"testing"
 
-	typesafe "github.com/Tangerg/typesafe-sdk-go"
+	typesafe "github.com/BhautikChudasama/typesafe-sdk-go"
 )
 
 // The rest of the suite swaps in a RoundTripper, which is the right way to test

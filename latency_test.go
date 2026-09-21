@@ -13,7 +13,7 @@ import (
 	"testing"
 	"time"
 
-	typesafe "github.com/Tangerg/typesafe-sdk-go"
+	typesafe "github.com/BhautikChudasama/typesafe-sdk-go"
 )
 
 // The latency probe measures the service and this SDK's share of it. It is

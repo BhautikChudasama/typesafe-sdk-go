@@ -1,3 +1,3 @@
-module github.com/Tangerg/typesafe-sdk-go
+module github.com/BhautikChudasama/typesafe-sdk-go
 
 go 1.25.0

@@ -8,7 +8,7 @@ import (
 	"slices"
 	"testing"
 
-	typesafe "github.com/Tangerg/typesafe-sdk-go"
+	typesafe "github.com/BhautikChudasama/typesafe-sdk-go"
 )
 
 // The payloads under testdata are responses the live service actually sent,

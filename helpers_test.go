@@ -10,7 +10,7 @@ import (
 	"sync"
 	"testing"
 
-	typesafe "github.com/Tangerg/typesafe-sdk-go"
+	typesafe "github.com/BhautikChudasama/typesafe-sdk-go"
 )
 
 // A recordedRequest is one request the transport saw, with its body already

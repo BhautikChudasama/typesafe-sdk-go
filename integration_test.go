@@ -26,7 +26,7 @@ import (
 	"testing"
 	"time"
 
-	typesafe "github.com/Tangerg/typesafe-sdk-go"
+	typesafe "github.com/BhautikChudasama/typesafe-sdk-go"
 )
 
 // liveClient returns a client pointed at the real API, or skips the test when

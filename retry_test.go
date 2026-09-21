@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	typesafe "github.com/Tangerg/typesafe-sdk-go"
+	typesafe "github.com/BhautikChudasama/typesafe-sdk-go"
 )
 
 // fastRetry is the default policy with the waiting taken out, so that a test

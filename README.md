@@ -1,6 +1,6 @@
 # typesafe-sdk-go
 
-[![Go Reference](https://pkg.go.dev/badge/github.com/Tangerg/typesafe-sdk-go.svg)](https://pkg.go.dev/github.com/Tangerg/typesafe-sdk-go)
+[![Go Reference](https://pkg.go.dev/badge/github.com/BhautikChudasama/typesafe-sdk-go.svg)](https://pkg.go.dev/github.com/BhautikChudasama/typesafe-sdk-go)
 [![Go 1.25+](https://img.shields.io/badge/go-1.25%2B-00ADD8?logo=go&logoColor=white)](https://go.dev/dl/)
 [![MIT](https://img.shields.io/badge/licence-MIT-blue)](./LICENSE)
 
@@ -13,7 +13,7 @@ a model.
 Install the module with:
 
 ```sh
-go get github.com/Tangerg/typesafe-sdk-go@latest
+go get github.com/BhautikChudasama/typesafe-sdk-go@latest
 ```
 
 It needs Go 1.25 or newer and has no third-party dependencies.
@@ -22,7 +22,7 @@ The package is named `typesafe`, so an import needs no alias in most editors but
 reads better with one:
 
 ```go
-import typesafe "github.com/Tangerg/typesafe-sdk-go"
+import typesafe "github.com/BhautikChudasama/typesafe-sdk-go"
 ```
 
 ## Quickstart
@@ -37,7 +37,7 @@ import (
 	"fmt"
 	"log"
 
-	typesafe "github.com/Tangerg/typesafe-sdk-go"
+	typesafe "github.com/BhautikChudasama/typesafe-sdk-go"
 )
 
 func main() {
@@ -333,8 +333,15 @@ accessors still refuse it.
 
 ## Documentation
 
-- [API reference on pkg.go.dev](https://pkg.go.dev/github.com/Tangerg/typesafe-sdk-go)
+- [API reference on pkg.go.dev](https://pkg.go.dev/github.com/BhautikChudasama/typesafe-sdk-go)
 - [TypeSafe documentation](https://docs.typesafe.ai/)
+
+## Attribution
+
+This repository is based on the original
+[Tangerg/typesafe-sdk-go](https://github.com/Tangerg/typesafe-sdk-go) project.
+The original work is used under the MIT License, with its copyright notices
+preserved in [LICENSE](LICENSE) and [NOTICE](NOTICE).
 
 ## License
 

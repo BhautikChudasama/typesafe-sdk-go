@@ -10,7 +10,7 @@ import (
 	"net/http/httptest"
 	"strings"
 
-	typesafe "github.com/Tangerg/typesafe-sdk-go"
+	typesafe "github.com/BhautikChudasama/typesafe-sdk-go"
 )
 
 // stubService stands in for api.typesafe.ai so that the examples below run

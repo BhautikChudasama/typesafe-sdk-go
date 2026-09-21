@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	typesafe "github.com/Tangerg/typesafe-sdk-go"
+	typesafe "github.com/BhautikChudasama/typesafe-sdk-go"
 )
 
 func TestQuestionMarshalling(t *testing.T) {

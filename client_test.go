@@ -11,7 +11,7 @@ import (
 	"testing"
 	"time"
 
-	typesafe "github.com/Tangerg/typesafe-sdk-go"
+	typesafe "github.com/BhautikChudasama/typesafe-sdk-go"
 )
 
 func TestNewClientDefaults(t *testing.T) {

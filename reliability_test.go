@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	typesafe "github.com/Tangerg/typesafe-sdk-go"
+	typesafe "github.com/BhautikChudasama/typesafe-sdk-go"
 )
 
 // The cases here are the ways an HTTP client goes subtly wrong under load and
